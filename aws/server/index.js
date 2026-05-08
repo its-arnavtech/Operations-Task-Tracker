@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const crypto = require("crypto");
 const { title } = require("process");
+const { create } = require("domain");
 
 const app = express();
 const PORT = 5000;
@@ -27,6 +28,33 @@ let tasks = [
         createdAt: new Date().toISOString(),
     },
 ];
+
+app.get("/api/tasks", (req, res) => {
+    res.json(tasks);
+});
+
+app.post("/api/tasks", (req, res) => {
+    const {title, description, status, priority} = req.body;
+
+    if(!title || title.trim() === ""){
+        return res.status(400).json({
+            error: "Title is required",
+        });
+    }
+
+    const newTask = {
+        id: crypto.randomUUID(),
+        title,
+        description: description || "",
+        status: status || "todo",
+        priority: priority || "medium",
+        createdAt: new Date().toISOString(),
+    };
+
+    tasks.push(newTask);
+
+    res.status(201).json(newTask);
+});
 
 app.get("/", (req, res) => {
     res.send("API running");
