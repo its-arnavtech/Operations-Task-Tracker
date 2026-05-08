@@ -56,6 +56,39 @@ app.post("/api/tasks", (req, res) => {
     res.status(201).json(newTask);
 });
 
+app.patch("/api/tasks/:id", (req, res) => {
+    const {id} = req.params;
+
+    const task = task.find((task) => task.id === id);
+    if(!task){
+        return res.status(404).json({
+            error: "Task not found",
+        });
+    }
+    const { title, description, status, priority} = req.body;
+
+        if(!title !== undefined) task.title = title;
+        if(description !== undefined) task.description = description;
+        if(status !== undefined) task.status = status;
+        if(priority !== undefined) task.priority = priority;
+
+        res.json(task);
+});
+
+app.delete("/api/tasks/:id", (req, res) => {
+    const {id} = req.params;
+    const taskExists = tasks.some((task) => task.id === id);
+
+    if (!taskExists){
+        return res.status(404).json({
+            error: "Task not found",
+        });
+    }
+
+    tasks = tasks.filter((task) => task.id !== id);
+    res.status(204).send();
+});
+
 app.get("/", (req, res) => {
     res.send("API running");
 });
