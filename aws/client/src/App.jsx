@@ -62,6 +62,54 @@ function App() {
     fetchTasks();
   }
 
+  async function deleteTask(id){
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: "DELETE",
+    });
+
+    if(!response.ok){
+      setError("Failed to delete task");
+      return;
+    }
+    fetchTasks();
+  }
+
+  async function updateTaskStatus(id, newStatus){
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: newStatus,
+      }),
+    });
+
+    if(!response.ok){
+      setError("Failed to update task status");
+      return;
+    }
+    fetchTasks();
+  }
+
+  async function updateTaskPriority(id, newPriority){
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        priority: newPriority,
+      }),
+    });
+
+    if(!response.ok){
+      setError("Failed to update task priority")
+      return;
+    }
+    fetchTasks();
+  }
+
   return (
     <div>
       <h1>Operations Task Tracker</h1>
@@ -117,6 +165,26 @@ function App() {
             <p>{task.description}</p>
             <p>Status: {task.status}</p>
             <p>Priority: {task.priority}</p>
+
+            <select
+              value={task.status}
+              onChange={(event) => updateTaskStatus(task.id, event.target.value)}
+              >
+                <option value="todo">Todo</option>
+                <option value="in-progress">In-Progress</option>
+                <option value="done">Done</option>
+              </select>
+
+              <select
+              value={task.priority}
+              onChange={(event) => updateTaskPriority(task.id, event.target.value)}
+              >
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+
+            <button onClick={() => deleteTask(task.id)}>Delete</button>
           </div>
         ))}
       </section>

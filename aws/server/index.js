@@ -20,7 +20,7 @@ let tasks = [
         createdAt: new Date().toISOString(),
     },
     {
-        id: crypto.randomUUID,
+        id: crypto.randomUUID(),
         title: "Review outage report",
         description: "Analyze last incident",
         status: "in-progress",
@@ -59,7 +59,7 @@ app.post("/api/tasks", (req, res) => {
 app.patch("/api/tasks/:id", (req, res) => {
     const {id} = req.params;
 
-    const task = task.find((task) => task.id === id);
+    const task = tasks.find((task) => task.id === id);
     if(!task){
         return res.status(404).json({
             error: "Task not found",
@@ -67,7 +67,7 @@ app.patch("/api/tasks/:id", (req, res) => {
     }
     const { title, description, status, priority} = req.body;
 
-        if(!title !== undefined) task.title = title;
+        if(title !== undefined) task.title = title;
         if(description !== undefined) task.description = description;
         if(status !== undefined) task.status = status;
         if(priority !== undefined) task.priority = priority;
