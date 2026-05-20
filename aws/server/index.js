@@ -52,6 +52,23 @@ app.get("api/events", (req, res) => {
     res.json(events);
 });
 
+app.post("/api/events", (req, res) => {
+    const {title, description, status, priority} = req.body;
+
+    if(title || title.trim() === ""){
+        return res.status(400).json({
+            error: "Title is required",
+        });
+    }
+
+    const newEvent = {
+        id: crypto.randomUUID(),
+        title,
+        description,
+        createdAt: new Date().toISOString(),
+    };
+})
+
 app.post("/api/tasks", (req, res) => {
     const {title, description, status, priority} = req.body;
 
