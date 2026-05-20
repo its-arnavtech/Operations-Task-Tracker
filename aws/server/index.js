@@ -48,6 +48,10 @@ app.get("/api/tasks", (req, res) => {
     res.json(tasks);
 });
 
+app.get("api/events", (req, res) => {
+    res.json(events);
+});
+
 app.post("/api/tasks", (req, res) => {
     const {title, description, status, priority} = req.body;
 
